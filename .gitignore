@@ -1,0 +1,10 @@
+# Compile files
+*.class
+
+# Netbeans project files
+nbproject
+
+# Package Files #
+*.jar
+*.war
+*.ear
