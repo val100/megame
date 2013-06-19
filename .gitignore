@@ -8,3 +8,4 @@ nbproject
 *.jar
 *.war
 *.ear
+/build/
