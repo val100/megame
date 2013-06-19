@@ -9,5 +9,10 @@ package com.nadeem.battleship;
  * @author val
  */
 public class Main {
-    
+    public static void main(String[] args) {
+        Board board = new Board();
+        board.showBoard();
+        board.placeShipRandom();
+        board.showBoard();
+    }
 }
