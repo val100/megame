@@ -4,8 +4,8 @@
  */
 package com.nadeem.battleship;
 
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +48,7 @@ public class Board {
     }
 
     public void showBoard() {
+        printLetters();
         Set<Entry<Cell, Status>> entries = board.entrySet();
         for (Entry<Cell, Status> entry : entries) {
             Cell cell = entry.getKey();
@@ -56,6 +57,16 @@ public class Board {
                 System.out.println();
             }
         }
+    }
+
+    private void printLetters() {
+        char c = 'A';
+        for (int i = 1; i <= SIZE; i++) {
+            System.out.print(" " + c + " ");
+            c = (char) (c + 1);
+        }
+        System.out.println();
+        System.out.println(" -  -  -  -  -  -  -  -  -  -  -  -");
     }
 
     public void placeShipRandom() {
@@ -69,6 +80,7 @@ public class Board {
                     Cell cell = new Cell(startX, startY);
                     cell.setStatus(Status.SHIP);
                     ship.setCoords(cell, direction);
+//                    board.put(cell, Status.SHIP);
                     reinitBoard(ship.getSize(), cell, direction);
                     break;
                 }
@@ -79,14 +91,16 @@ public class Board {
     private void reinitBoard(int size, Cell cell, Direction dir) {
         try {
             Cell cloneCell = cell.clone();
-            if (dir == Direction.HORIZONTAL) {
-                for (int i = cell.getX(); i < size; i++) {
+            if (dir == Direction.VERTICAL) {
+                for (int i = cell.getX(); i < cell.getX() + size; i++) {
                     cloneCell.setX(i);
+                    Status s = board.get(cloneCell);
                     board.put(cloneCell, Status.SHIP);
                 }
             } else {
-                for (int i = cell.getY(); i < size; i++) {
+                for (int i = cell.getY(); i < cell.getY() + size; i++) {
                     cloneCell.setY(i);
+                    Status s = board.get(cloneCell);
                     board.put(cloneCell, Status.SHIP);
                 }
             }
@@ -151,14 +165,14 @@ public class Board {
      */
     private boolean checkPlacementCoords(int startX, int startY, Direction direction, int size) {
         // check starting coordinates
-        if (startX < 0 || startX >= SIZE || startY < 0 || startY >= SIZE) {
+        if (startX < 1 || startX >= SIZE || startY < 1 || startY >= SIZE) {
             return false;
         }
 
         // check size
-        if (direction == Direction.HORIZONTAL && startX + size >= SIZE) {
+        if (direction == Direction.HORIZONTAL && startY + size >= SIZE) {
             return false;
-        } else if (direction == Direction.VERTICAL && startY + size >= SIZE) {
+        } else if (direction == Direction.VERTICAL && startX + size >= SIZE) {
             return false;
         }
 
@@ -213,7 +227,7 @@ public class Board {
                         }
                     }
                 }
-                
+
             } else if (startX == 0) {
                 for (int i = startX; i <= startX + size; i++) {
                     for (int j = startY - 1; j <= startY + 1; j++) {
