@@ -5,7 +5,6 @@
 package com.nadeem.battleship;
 
 public class Cell implements Comparable<Cell>, Cloneable {
-
     private int x;
     private int y;
     private Status status;
@@ -38,36 +37,6 @@ public class Cell implements Comparable<Cell>, Cloneable {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Cell other = (Cell) obj;
-        if (this.x != other.x) {
-            return false;
-        }
-        if (this.y != other.y) {
-            return false;
-        }
-        if (this.status != other.status) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 37 * hash + this.x;
-        hash = 37 * hash + this.y;
-        hash = 37 * hash + (this.status != null ? this.status.hashCode() : 0);
-        return hash;
     }
 
     @Override
