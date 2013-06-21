@@ -22,6 +22,9 @@ public class Board {
         buildShips();
     }
 
+    /**
+     * Initialize the game-board contents and the status
+     */
     private void initBoard() {
         for (int i = 1; i <= SIZE; i++) {
             for (int j = 1; j <= SIZE; j++) {
@@ -30,6 +33,9 @@ public class Board {
         }
     }
 
+    /**
+     * Creating all ships
+     */
     private void buildShips() {
         ships.add(new Ship(Ship.CARRIER));
         ships.add(new Ship(Ship.CRUISER));
@@ -79,10 +85,10 @@ public class Board {
      *
      * @param startX starting X-coordinate for ship
      * @param startY starting Y-coordinate for ship
-     * @param orientation ship orientation
-     * @param size ships size in squares
+     * @param direction ship direction
+     * @param size ships size in cells
      *
-     * @see #checkPlacementCoords(int, int, int, int)
+     * @see #checkPlacementCoords(int, int, Direction, int)
      *
      * @return return true if ship placed successfully, otherwise false
      */
@@ -90,25 +96,26 @@ public class Board {
         if (!checkPlacementCoords(startX, startY, direction, size)) {
             return false;
         }
-        try {
-            Ship ship = getShipBySize(size);
-            ship.setCoords(new Cell(startX,startY), direction);
-        } catch (IllegalShipSizeException ex) {
-            return false;
-        }
 
         int checkX = startX;
         int checkY = startY;
         Cell checkCell = new Cell(checkX, checkY);
         // place ship
-        for (int i = 0; i < size; i++) {
-            board.put(checkCell, Status.SHIP);
-            if (direction == Direction.HORIZONTAL) {
-                startX++;
-                checkCell.setX(startX);
-            } else {
-                startY++;
-                checkCell.setY(startY);
+        for (Ship ship : ships) {
+            if (ship.getSize() == size && !ship.inCell(checkCell)) {
+                Cell startCell = new Cell(startX,startY);
+                ship.setCoords(startCell, direction);
+                for (int i = 0; i < size; i++) {
+                    board.put(checkCell, Status.SHIP);
+                    if (direction == Direction.VERTICAL) {
+                        startX++;
+                        checkCell.setX(startX);
+                    } else {
+                        startY++;
+                        checkCell.setY(startY);
+                    }
+                }
+                break;
             }
         }
         return true;
@@ -126,14 +133,14 @@ public class Board {
      */
     public boolean checkPlacementCoords(int startX, int startY, Direction direction, int size) {
         // check starting coordinates
-        if (startX < 1 || startX >= SIZE || startY < 1 || startY >= SIZE) {
+        if (startX < 1 || startX > SIZE || startY < 1 || startY > SIZE) {
             return false;
         }
 
         // check size
-        if (direction == Direction.HORIZONTAL && startY + size >= SIZE) {
+        if (direction == Direction.HORIZONTAL && startY + size > SIZE) {
             return false;
-        } else if (direction == Direction.VERTICAL && startX + size >= SIZE) {
+        } else if (direction == Direction.VERTICAL && startX + size > SIZE) {
             return false;
         }
 
@@ -210,7 +217,10 @@ public class Board {
         return true;
     }
 
-    public void placeShipRandom() {
+    /**
+     * Places a ship on the board randomly .
+     */
+    public void placeShipRandomly() {
         Random randomCell = new Random();
         for (Ship ship : ships) {
             while (true) {
@@ -228,6 +238,13 @@ public class Board {
         }
     }
 
+    /**
+     * Initialization board cells after placed each ship .
+     *
+     * @param size the ship size
+     * @param cell the start cell
+     * @param dir
+     */
     private void reinitBoard(int size, Cell cell, Direction dir) {
         try {
             Cell cloneCell = cell.clone();
@@ -253,22 +270,46 @@ public class Board {
         return ships;
     }
 
-    public Ship getShipBySize(int size) throws IllegalShipSizeException {
-        if (size > Ship.CARRIER && size < Ship.PATROL) {
-            throw new IllegalShipSizeException("Illegal ship size : " + size);
-        }
+    public Ship getShipByCell(Cell cell) {
         Iterator<Ship> iter = ships.iterator();
         Ship ship = ships.get(0);
         while (iter.hasNext()) {
             ship = iter.next();
-            if (ship.getSize() == size) {
-                break;
+            if (ship.inCell(cell)) {
+                return ship;
             }
         }
         return ship;
     }
 
-    boolean shoot(int x, int y) {
-        throw new UnsupportedOperationException("Not yet implemented");
+//    public Ship getShipBySize(int size, boolean onboard) throws IllegalShipSizeException {
+//        if (size > Ship.CARRIER && size < Ship.PATROL) {
+//            throw new IllegalShipSizeException("Illegal ship size : " + size);
+//        }
+//        Iterator<Ship> iter = ships.iterator();
+//        Ship ship = ships.get(0);
+//        while (iter.hasNext()) {
+//            ship = iter.next();
+//            if (ship.getSize() == size && ship.getCell() == null) {
+//                break;
+//            }
+//        }
+//        return ship;
+//    }
+    public boolean shoot(int x, int y) {
+        boolean result = true;
+        Cell cell = new Cell(x, y);
+        Status status = board.get(cell);
+        switch (status) {
+            default:
+            case BLANK:
+                board.put(cell, Status.MISS);
+                break;
+            case SHIP:
+                board.put(cell, Status.HIT);
+                getShipByCell(cell).incDamage();
+                break;
+        }
+        return result;
     }
 }
