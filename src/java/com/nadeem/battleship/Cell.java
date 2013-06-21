@@ -1,14 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.nadeem.battleship;
 
+/**
+ * The Cell class models each individual cell of the game board.
+ * 
+ * @author nadeem
+ */
 public class Cell implements Comparable<Cell>, Cloneable {
-    private int x;
-    private int y;
-    private Status status;
-
+    private int x,y; // x and y of this cell
+    private Status status; // the status of cell
+    /**
+     * Constructor to initialize this cell  
+     * 
+     * @param x the x 
+     * @param y the y
+     */
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
@@ -42,6 +47,36 @@ public class Cell implements Comparable<Cell>, Cloneable {
     @Override
     public String toString() {
         return "(" + x + "," + y + ")" + status.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cell other = (Cell) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        if (this.status != other.status) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + this.x;
+        hash = 61 * hash + this.y;
+        hash = 61 * hash + (this.status != null ? this.status.hashCode() : 0);
+        return hash;
     }
 
     @Override
