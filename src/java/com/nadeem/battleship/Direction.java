@@ -7,14 +7,22 @@ package com.nadeem.battleship;
 import java.util.Random;
 
 /**
+ * The direction of the ship on the board. Horizontal - Right from the start
+ * point Vertical - Bottom from the start point
  *
- * @author val
+ * @author nadeem
  */
 public enum Direction {
+
     HORIZONTAL, VERTICAL;
-    
+
+    /**
+     * Returns random direction regards
+     *
+     * @return random direction
+     */
     public static Direction getRundomDirection() {
         Random rand = new Random();
-        return rand.nextBoolean()== Boolean.TRUE ? HORIZONTAL:VERTICAL;
+        return rand.nextBoolean() == Boolean.TRUE ? HORIZONTAL : VERTICAL;
     }
 }

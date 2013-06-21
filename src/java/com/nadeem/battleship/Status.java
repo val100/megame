@@ -10,20 +10,10 @@ package com.nadeem.battleship;
  */
 public enum Status {
 
-    BLANK(0),
-    MISS(1),
-    SHIP(2),
-    HIT(3);
-    
-    private int status;
-
-    Status(int status) {
-        this.status = status;
-    }
-
-    public int status() {
-        return status;
-    }
+    BLANK,
+    MISS,
+    SHIP,
+    HIT;
 
     @Override
     public String toString() {
