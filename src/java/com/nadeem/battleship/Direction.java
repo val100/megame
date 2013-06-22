@@ -11,6 +11,7 @@ import java.util.Random;
  * point Vertical - Bottom from the start point
  *
  * @author nadeem
+ * @version 1.0
  */
 public enum Direction {
 

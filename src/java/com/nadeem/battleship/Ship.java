@@ -4,6 +4,7 @@ package com.nadeem.battleship;
  * The Ship class models each individual ship of the game board.
  *
  * @author nadeem
+ * @version 1.0
  */
 public class Ship {
 
@@ -24,12 +25,16 @@ public class Ship {
      * @param size the ship size
      */
     public Ship(int size) {
-        this.size = size;
-        this.direction = Direction.HORIZONTAL;
-        this.damage = 0;
-        this.sunk = false;
+        this(size, null, Direction.HORIZONTAL);
     }
 
+    /**
+     * Constructor to initialize this ship with arguments .
+     *
+     * @param size the ship size
+     * @param cell the start cell of ship
+     * @param direction the direction of ship
+     */
     public Ship(int size, Cell cell, Direction direction) {
         this.size = size;
         this.cell = cell;
@@ -50,10 +55,19 @@ public class Ship {
         return size;
     }
 
+    /**
+     * Return damage
+     *
+     * @return damage
+     */
     public int getDamage() {
         return damage;
     }
 
+    /**
+     * Increment damage indicator .When it equals to ship size the ship will set
+     * as sunk .
+     */
     public void incDamage() {
         damage++;
         if (damage == size) {
@@ -76,7 +90,7 @@ public class Ship {
     }
 
     /**
-     * Check if the given cell has been occupied with ship. 
+     * Check if the given cell has been occupied with ship.
      *
      * @param c the cell to check
      * @return true if cell has been occupied with ship , otherwise false
@@ -88,7 +102,7 @@ public class Ship {
         // if given cell equals to start cell of pplaced ship
         if (cell.equals(c)) {
             return true;
-        // else check if the given cell occupied with ship
+            // else check if the given cell occupied with ship
         } else {
             Cell checkCell = c;
             if (direction == Direction.HORIZONTAL) {

@@ -4,6 +4,7 @@ package com.nadeem.battleship;
  * The Cell class models each individual cell of the game board.
  * 
  * @author nadeem
+ * @version 1.0
  */
 public class Cell implements Comparable<Cell>, Cloneable {
     private int x,y; // x and y of this cell

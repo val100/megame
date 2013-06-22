@@ -5,15 +5,17 @@
 package com.nadeem.battleship;
 
 /**
+ * The status of the cell on the board. 
  *
  * @author val
+ * @version 1.0
  */
 public enum Status {
 
-    BLANK,
-    MISS,
-    SHIP,
-    HIT;
+    BLANK, // the cell in the beginning , without ships and not shoot
+    MISS,  // the cell after shooting with now ship
+    SHIP,  // the cell with ship on it 
+    HIT;   // the cell with the ship that has been hit
 
     @Override
     public String toString() {

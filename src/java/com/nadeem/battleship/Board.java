@@ -8,7 +8,14 @@ import java.util.Map.Entry;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * The Board class models the game-board .
+ * <p>This class where ships a placed and shoots.Also this class responsible 
+ * for showing current states of game 
+ * 
+ * @author nadeem
+ * @version 1.0
+ */
 public class Board {
 
     private List<Ship> ships;
