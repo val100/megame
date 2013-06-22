@@ -53,28 +53,44 @@ public class Board {
      * Print the game board
      */
     public void showBoard() {
-        printLetters();
+        StringBuilder builder = new StringBuilder(printLetters());
         Set<Entry<Cell, Status>> entries = board.entrySet();
+        int i = 1;
+        builder.append(" " + i++ + " ");
+        //System.out.print(" " + i++ + " ");
         for (Entry<Cell, Status> entry : entries) {
             Cell cell = entry.getKey();
-            System.out.print(entry.getValue());
-            if (cell.getY() % SIZE == 0) {
-                System.out.println();
+            builder.append(entry.getValue());
+            //System.out.print(entry.getValue());
+            if (cell.getY() % SIZE == 0 && cell.getX() < SIZE) {
+                builder.append("\n");
+                if (i / 10 > 0) {
+                    builder.append(" " + i++);
+                } else {
+                    builder.append(" " + i++ + " ");
+                }
             }
         }
+        builder.append("\n");
+        builder.append("    -  -  -  -  -  -  -  -  -  -  -  -");
+        System.out.println(builder.toString());
     }
 
     /**
      * Print top board letters
      */
-    private void printLetters() {
+    private String printLetters() {
+        StringBuilder builder = new StringBuilder();
         char c = 'A';
+        builder.append("   ");
         for (int i = 1; i <= SIZE; i++) {
-            System.out.print(" " + c + " ");
+            builder.append(" " + c + " ");
             c = (char) (c + 1);
         }
-        System.out.println();
-        System.out.println(" -  -  -  -  -  -  -  -  -  -  -  -");
+        builder.append("\n");
+        builder.append("    -  -  -  -  -  -  -  -  -  -  -  -");
+        builder.append("\n");
+        return builder.toString();
     }
 
     /**
@@ -103,7 +119,7 @@ public class Board {
         // place ship
         for (Ship ship : ships) {
             if (ship.getSize() == size && !ship.inCell(checkCell)) {
-                Cell startCell = new Cell(startX,startY);
+                Cell startCell = new Cell(startX, startY);
                 ship.setCoords(startCell, direction);
                 for (int i = 0; i < size; i++) {
                     board.put(checkCell, Status.SHIP);
@@ -282,20 +298,6 @@ public class Board {
         return ship;
     }
 
-//    public Ship getShipBySize(int size, boolean onboard) throws IllegalShipSizeException {
-//        if (size > Ship.CARRIER && size < Ship.PATROL) {
-//            throw new IllegalShipSizeException("Illegal ship size : " + size);
-//        }
-//        Iterator<Ship> iter = ships.iterator();
-//        Ship ship = ships.get(0);
-//        while (iter.hasNext()) {
-//            ship = iter.next();
-//            if (ship.getSize() == size && ship.getCell() == null) {
-//                break;
-//            }
-//        }
-//        return ship;
-//    }
     public boolean shoot(int x, int y) {
         boolean result = true;
         Cell cell = new Cell(x, y);
