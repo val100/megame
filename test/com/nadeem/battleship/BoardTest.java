@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Categories;
 
 /**
  *
@@ -84,10 +85,10 @@ public class BoardTest {
 
         actual = board.checkPlacementCoords(-1, 1, Direction.HORIZONTAL, 4);
         assertEquals(expect, actual);
-        
+
         actual = board.checkPlacementCoords(13, 13, Direction.VERTICAL, 4);
         assertEquals(expect, actual);
-        
+
         actual = board.checkPlacementCoords(13, 13, Direction.HORIZONTAL, 4);
         assertEquals(expect, actual);
     }
@@ -101,29 +102,22 @@ public class BoardTest {
     }
 
     @Test
-    @Ignore
-    public void shootShipWasNotMissed() throws IllegalShipSizeException {
-        int size = 4;
+    public void shootedShipBecameSunk() throws ShipWasNotFoundInCell {
+        int size = 1;
         int x = 1;
         int y = 1;
-        
         board.placeShip(x, y, Direction.VERTICAL, size);
-        Ship ship = getPlacedOnBoardShip(x, y, Direction.VERTICAL, size);                
-        Cell cell = new Cell(x, y);
-        cell.setStatus(Status.SHIP);
-        ship.setCoords(cell, Direction.VERTICAL);
         board.shoot(x, y);
+        Ship ship = board.getShipByCell(new Cell(x, y));
+        ship.incDamage();
+        assertEquals(true, ship.isSunk());
 
-        
-        int actual = ship.getDamage();
-        int expect = 1;
-        assertEquals(expect, actual);
     }
 
     @Test
     @Ignore
-    public void shootShipWasMissed() throws IllegalShipSizeException {
-        int size = 4;
+    public void shootShipWasMissed() {
+        int size = 1;
         int x = 1;
         int y = 1;
         board.placeShip(x, y, Direction.VERTICAL, size);
@@ -136,7 +130,7 @@ public class BoardTest {
 
     @Test
     @Ignore
-    public void afterShootingShipTheShipSunked() throws IllegalShipSizeException {
+    public void afterShootingShipTheShipSunked() {
         int size = 4;
         int x = 1;
         int y = 1;
@@ -153,7 +147,7 @@ public class BoardTest {
 
     @Test
     @Ignore
-    public void whenShipSunkedTheBoardCellWasChanged() throws IllegalShipSizeException {
+    public void whenShipSunkedTheBoardCellWasChanged() {
         int size = 4;
         int x = 1;
         int y = 1;
