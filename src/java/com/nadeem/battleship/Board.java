@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
- * The Board class models the game-board .
- * <p>This class where ships a placed and shoots.Also this class responsible 
- * for showing current states of game 
- * 
+ * The Board class models the game-board . <p>This class where ships a placed
+ * and shoots.Also this class responsible for showing current states of game
+ *
  * @author nadeem
- * @version 1.0
+ * @version 1.1
  */
 public class Board {
 
@@ -82,6 +82,7 @@ public class Board {
         builder.append("    -  -  -  -  -  -  -  -  -  -  -  -");
         System.out.println(builder.toString());
     }
+    
 
     /**
      * Print top board letters
@@ -100,6 +101,50 @@ public class Board {
         return builder.toString();
     }
 
+    public String showBoardHTML() {
+        StringBuilder builder = new StringBuilder("<table>");
+        builder.append(printLettersHTML());
+        Set<Entry<Cell, Status>> entries = board.entrySet();
+        int i = 1;
+        builder.append("<tr>");
+        builder.append("<td>" + i++ + "</td>");
+        //System.out.print(" " + i++ + " ");
+        for (Entry<Cell, Status> entry : entries) {
+            Cell cell = entry.getKey();
+//            builder.append("<td>");
+            builder.append(entry.getValue().toHtmlString());
+//            builder.append("</td>");
+            //System.out.print(entry.getValue());
+            if (cell.getY() % SIZE == 0 && cell.getX() < SIZE) {
+                builder.append("</tr><tr>");
+                if (i / 10 > 0) {
+                    builder.append("<td>" + i+++"</td>");
+                } else {
+                    builder.append("<td>" + i++ + "</td>");
+                }
+            }
+        }
+        builder.append("</tr>");
+        builder.append("</table>");
+        return builder.toString();
+    }  
+    
+    private String printLettersHTML() {
+        StringBuilder builder = new StringBuilder();
+        char c = 'A';
+        builder.append("<tr>");
+        builder.append("<td></td>");
+        for (int i = 1; i <= SIZE; i++) {
+            builder.append("<td>");
+            builder.append(" " + c + " ");
+            builder.append("</td>");
+            c = (char) (c + 1);
+        }
+        builder.append("</tr>");
+        return builder.toString();
+    }
+    
+    
     /**
      * Places a ship on the board.
      *
@@ -293,32 +338,47 @@ public class Board {
         return ships;
     }
 
-    public Ship getShipByCell(Cell cell) {
+    public Ship getShipByCell(Cell cell) throws ShipWasNotFoundInCell {
         Iterator<Ship> iter = ships.iterator();
-        Ship ship = ships.get(0);
+        Ship ship;
         while (iter.hasNext()) {
             ship = iter.next();
             if (ship.inCell(cell)) {
                 return ship;
             }
         }
-        return ship;
+        throw new ShipWasNotFoundInCell("The ship was not found in given cell "
+                + cell);
     }
 
+    /**
+     * Take a shot at the specified cell
+     *
+     * NOTE: shooting at a cell that has already been shot not considered legal
+     * and is not checked.
+     *
+     * @param x the x coordinate for shot
+     * @param y the y coordinate for shot
+     * @return true if shot successful, otherwise false
+     */
     public boolean shoot(int x, int y) {
-        boolean result = true;
+        if (x < 0 || x > SIZE) {
+            return false;
+        } else if (y < 0 || y > SIZE) {
+            return false;
+        }
+
         Cell cell = new Cell(x, y);
         Status status = board.get(cell);
         switch (status) {
             default:
             case BLANK:
                 board.put(cell, Status.MISS);
-                break;
+                return false;
             case SHIP:
                 board.put(cell, Status.HIT);
-                getShipByCell(cell).incDamage();
-                break;
+                return true;
+//                getShipByCell(cell).incDamage();
         }
-        return result;
     }
 }
