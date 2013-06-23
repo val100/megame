@@ -5,10 +5,10 @@
 package com.nadeem.battleship;
 
 /**
- * The status of the cell on the board. 
+ * The status of the cell on the board.
  *
  * @author val
- * @version 1.0
+ * @version 1.1
  */
 public enum Status {
 
@@ -33,6 +33,26 @@ public enum Status {
                 break;
             case HIT:
                 textStatus = " X ";
+                break;
+        }
+        return textStatus;
+    }
+
+    public String toHtmlString() {
+        String textStatus = "";
+        switch (this) {
+            default:
+            case BLANK:
+                textStatus = "<td class='status_blank'></td>";
+                break;
+            case MISS:
+                textStatus = "<td class='status_miss'></td>";
+                break;
+            case SHIP:
+                textStatus = "<td class='status_ship'></td>";
+                break;
+            case HIT:
+                textStatus = "<td class='status_hit'></td>";
                 break;
         }
         return textStatus;
