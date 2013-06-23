@@ -10,9 +10,17 @@ package com.nadeem.battleship;
  */
 public class Main {
     public static void main(String[] args) {
-        Board board = new Board();
-        board.showBoard();
-        board.placeShipRandomly();
-        board.showBoard();
+        Board oponentBoard = new Board();
+        oponentBoard.showBoard();
+        oponentBoard.placeShipRandomly();
+        oponentBoard.showBoard();
+        
+        Board myBoard= new Board();
+        
+        Player player = new Player(myBoard,oponentBoard);
+        player.placeShipRandomly();
+        
+        player.shoot(1, 5);
+        
     }
 }
