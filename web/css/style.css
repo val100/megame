@@ -1,0 +1,80 @@
+* { margin: 0; padding: 0; }
+
+td.top_line {
+    background-color:white;
+    width:30px;
+    height:30px;
+    margin: 0;
+    padding: 0;
+    line-height: 0.1em;
+    clear: both;
+    border:2px solid #000;     
+}
+td.status_blank {
+    background-image:url("./images/blank.png");
+    background-color:white;
+    width:30px;
+    height:30px;
+    margin: 0;
+    padding: 0;
+    line-height: 0.1em;
+    clear: both;
+    border:2px solid #ccc; 
+}
+td.status_blank:hover  {
+    background-color:white;
+    width:30px;
+    height:30px;
+    border:2px solid #005f00;
+}
+td.status_miss {
+    background-image:url("./images/miss.png");
+    background-color:gray;
+    width:30px;
+    height:30px;
+    margin: 0;
+    padding: 0;   
+    line-height: 0.1em;
+    clear: both;
+    border:2px solid #0fe;
+}
+td.status_miss:hover  {
+    background-color:gray;
+    width:30px;
+    height:30px;
+    border:2px solid #005f00;
+}
+td.status_ship {
+    background-image:url("/images/ship.png");
+    background-color:white;
+    width:30px;
+    height:30px;
+    margin: 0;
+    padding: 0;
+    line-height: 0.1em;
+    clear: both;
+    border:2px solid #00f;
+}
+td.status_ship:hover  {
+    background-color:white;
+    width:30px;
+    height:30px;
+    border:2px solid #005f00;
+}
+td.status_hit {
+    background-image:url("./images/hit.png");
+    background-color:red;
+    width:30px;
+    height:30px;
+    margin: 0;
+    padding: 0;
+    line-height: 0.1em;
+    clear: both;
+    border:2px solid #f00;
+}
+td.status_hit:hover  {
+    background-color:blue;
+    width:30px;
+    height:30px;
+    border:2px solid #005f00;
+}
