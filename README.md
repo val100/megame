@@ -1,4 +1,4 @@
-battleship
+megame
 ==========
 
-battleship game 
+me game 
