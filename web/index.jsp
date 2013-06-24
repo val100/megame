@@ -53,7 +53,7 @@
         </script>        
     </head>
     <body onload="setAutoLoad();">
-        <h1>Battleship game</h1>
+        <h1>Me game</h1>
          <form name="mainForm">
             <fieldset>
                 <div id="tableData">
