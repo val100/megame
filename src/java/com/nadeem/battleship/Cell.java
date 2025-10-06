@@ -59,16 +59,7 @@ public class Cell implements Comparable<Cell>, Cloneable {
             return false;
         }
         final Cell other = (Cell) obj;
-        if (this.x != other.x) {
-            return false;
-        }
-        if (this.y != other.y) {
-            return false;
-        }
-        if (this.status != other.status) {
-            return false;
-        }
-        return true;
+        return this.x == other.x && this.y == other.y;
     }
 
     @Override
@@ -76,7 +67,6 @@ public class Cell implements Comparable<Cell>, Cloneable {
         int hash = 7;
         hash = 61 * hash + this.x;
         hash = 61 * hash + this.y;
-        hash = 61 * hash + (this.status != null ? this.status.hashCode() : 0);
         return hash;
     }
 
