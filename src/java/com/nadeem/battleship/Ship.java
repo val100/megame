@@ -104,21 +104,14 @@ public class Ship {
             return true;
             // else check if the given cell occupied with ship
         } else {
-            Cell checkCell = c;
             if (direction == Direction.HORIZONTAL) {
-                if ((checkCell.getX() >= cell.getX() && checkCell.getX() <= cell.getX() + size)
-                        && checkCell.getY() == cell.getY()) {
-                    return true;
-                } else {
-                    return false;
-                }
+                int startX = cell.getX();
+                int endX = cell.getX() + size - 1; // inclusive
+                return c.getY() == cell.getY() && c.getX() >= startX && c.getX() <= endX;
             } else {
-                if ((checkCell.getY() >= cell.getY() && checkCell.getY() <= cell.getY() + size)
-                        && checkCell.getX() == cell.getX()) {
-                    return true;
-                } else {
-                    return false;
-                }
+                int startY = cell.getY();
+                int endY = cell.getY() + size - 1; // inclusive
+                return c.getX() == cell.getX() && c.getY() >= startY && c.getY() <= endY;
             }
         }
     }

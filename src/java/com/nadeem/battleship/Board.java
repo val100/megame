@@ -165,28 +165,22 @@ public class Board {
             return false;
         }
 
-        int checkX = startX;
-        int checkY = startY;
-        Cell checkCell = new Cell(checkX, checkY);
-        // place ship
+        boolean placed = false;
+        // place the first unplaced ship of the requested size
         for (Ship ship : ships) {
-            if (ship.getSize() == size && !ship.inCell(checkCell)) {
+            if (ship.getSize() == size && ship.getCell() == null) {
                 Cell startCell = new Cell(startX, startY);
                 ship.setCoords(startCell, direction);
                 for (int i = 0; i < size; i++) {
-                    board.put(checkCell, Status.SHIP);
-                    if (direction == Direction.VERTICAL) {
-                        startX++;
-                        checkCell.setX(startX);
-                    } else {
-                        startY++;
-                        checkCell.setY(startY);
-                    }
+                    int x = startX + (direction == Direction.VERTICAL ? i : 0);
+                    int y = startY + (direction == Direction.HORIZONTAL ? i : 0);
+                    board.put(new Cell(x, y), Status.SHIP);
                 }
+                placed = true;
                 break;
             }
         }
-        return true;
+        return placed;
     }
 
     /**
@@ -206,79 +200,20 @@ public class Board {
         }
 
         // check size
-        if (direction == Direction.HORIZONTAL && startY + size > SIZE) {
+        if (direction == Direction.HORIZONTAL && startY + size - 1 > SIZE) {
             return false;
-        } else if (direction == Direction.VERTICAL && startX + size > SIZE) {
+        } else if (direction == Direction.VERTICAL && startX + size - 1 > SIZE) {
             return false;
         }
-
-        if (direction == Direction.HORIZONTAL) {
-            if (startX != 0 && startY != 0) {
-                for (int i = startX - 1; i <= startX + 1; i++) {
-                    for (int j = startY - 1; j <= startY + size; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            } else if (startX == 0 && startY == 0) {
-                for (int i = startX; i <= startX + 1; i++) {
-                    for (int j = startY; j <= startY + size; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            } else if (startX == 0) {
-                for (int i = startX; i <= startX + 1; i++) {
-                    for (int j = startY - 1; j <= startY + size; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                for (int i = startX - 1; i <= startX + 1; i++) {
-                    for (int j = startY; j <= startY + size; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        } else {
-            if (startX != 0 && startY != 0) {
-                for (int i = startX - 1; i <= startX + size; i++) {
-                    for (int j = startY - 1; j <= startY + 1; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            } else if (startX == 0 && startY == 0) {
-                for (int i = startX; i <= startX + size; i++) {
-                    for (int j = startY; j <= startY + 1; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-
-            } else if (startX == 0) {
-                for (int i = startX; i <= startX + size; i++) {
-                    for (int j = startY - 1; j <= startY + 1; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                for (int i = startX - 1; i <= startX + size; i++) {
-                    for (int j = startY; j <= startY + 1; j++) {
-                        if (board.get(new Cell(i, j)) == Status.SHIP) {
-                            return false;
-                        }
-                    }
+        // check adjacency and overlap (no ships touching even diagonally)
+        int fromX = Math.max(1, startX - 1);
+        int toX = Math.min(SIZE, direction == Direction.VERTICAL ? startX + size : startX + 1);
+        int fromY = Math.max(1, startY - 1);
+        int toY = Math.min(SIZE, direction == Direction.HORIZONTAL ? startY + size : startY + 1);
+        for (int i = fromX; i <= toX; i++) {
+            for (int j = fromY; j <= toY; j++) {
+                if (board.get(new Cell(i, j)) == Status.SHIP) {
+                    return false;
                 }
             }
         }
@@ -293,11 +228,10 @@ public class Board {
         for (Ship ship : ships) {
             while (true) {
                 Direction direction = Direction.getRundomDirection();
-                int startX = randomCell.nextInt(SIZE);
-                int startY = randomCell.nextInt(SIZE);
+                int startX = randomCell.nextInt(SIZE) + 1;
+                int startY = randomCell.nextInt(SIZE) + 1;
                 if (checkPlacementCoords(startX, startY, direction, ship.getSize())) {
                     Cell cell = new Cell(startX, startY);
-                    cell.setStatus(Status.SHIP);
                     ship.setCoords(cell, direction);
                     reinitBoard(ship.getSize(), cell, direction);
                     break;
@@ -314,23 +248,18 @@ public class Board {
      * @param dir
      */
     private void reinitBoard(int size, Cell cell, Direction dir) {
-        try {
-            Cell cloneCell = cell.clone();
-            if (dir == Direction.VERTICAL) {
-                for (int i = cell.getX(); i < cell.getX() + size; i++) {
-                    cloneCell.setX(i);
-                    Status s = board.get(cloneCell);
-                    board.put(cloneCell, Status.SHIP);
-                }
-            } else {
-                for (int i = cell.getY(); i < cell.getY() + size; i++) {
-                    cloneCell.setY(i);
-                    Status s = board.get(cloneCell);
-                    board.put(cloneCell, Status.SHIP);
-                }
+        if (dir == Direction.VERTICAL) {
+            for (int i = 0; i < size; i++) {
+                int x = cell.getX() + i;
+                int y = cell.getY();
+                board.put(new Cell(x, y), Status.SHIP);
             }
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            for (int i = 0; i < size; i++) {
+                int x = cell.getX();
+                int y = cell.getY() + i;
+                board.put(new Cell(x, y), Status.SHIP);
+            }
         }
     }
 
@@ -362,9 +291,9 @@ public class Board {
      * @return true if shot successful, otherwise false
      */
     public boolean shoot(int x, int y) {
-        if (x < 0 || x > SIZE) {
+        if (x < 1 || x > SIZE) {
             return false;
-        } else if (y < 0 || y > SIZE) {
+        } else if (y < 1 || y > SIZE) {
             return false;
         }
 
@@ -377,6 +306,11 @@ public class Board {
                 return false;
             case SHIP:
                 board.put(cell, Status.HIT);
+                try {
+                    getShipByCell(cell).incDamage();
+                } catch (ShipWasNotFoundInCell ex) {
+                    Logger.getLogger(Board.class.getName()).log(Level.WARNING, "Ship not found at hit cell {0}", cell);
+                }
                 return true;
 //                getShipByCell(cell).incDamage();
         }
