@@ -50,6 +50,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- PostgreSQL driver for production profile/runtime -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- H2 for local dev/tests -->
     <dependency>
       <groupId>com.h2database</groupId>
